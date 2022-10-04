@@ -1,28 +1,48 @@
 "use strict";
 
-const http = require("http");
-const pdf2pic = require("pdf2pic");
+const express = require("express");
+const puppeteer = require("puppeteer");
+const path = require("path");
 
-const port = 3000;
-const outputPath = "./image.jpeg";
+const port = process.env.PORT || 3000;
+const app = express();
 
-const server = http.createServer((req, res) => {
+const contentType = {
+  base64image: "Image/Base64",
+  html: "text/html",
+  pdf: "application/pdf",
+  Json: "application/json",
+  plainText: "text/plain",
+  jpeg: "image/jpeg",
+};
 
-  let body = "<h1>Hello World</h1>";
-  
-  req.on("data", (chunk) => {
-    body += chunk;
-  })
-  .on("end", () => {
-    res.on("error", err => console.error(err));
-    
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "Image/Base64");
-    
-    const { headers, method, url } = req;
+let html = "Hello World";
 
-    const output = pdf2pic.fromBase64(body).bulk(1, true);
+app.get("/", (req, res) => {
+  res.send(html);
+});
 
-    res.end(output);
+app.post("/", (req, res) => {
+  const options = {
+    root: path.join(__dirname),
+  };
+
+  html = req.body;
+
+  (async () => {
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox"],
+    });
+    const page = await browser.newPage();
+    await page.goto("https://www.yahoo.co.jp/");
+    await page.screenshot({ path: "example.jpeg" });
+    await browser.close();
+  })();
+
+  res.setHeader("Content-Type", contentType.jpeg);
+  res.sendFile("example.jpeg", options, (err) => {
+    console.log(err);
   });
-}).listen(port);
+});
+
+app.listen(port, () => console.log(`Listening on port ${port}`));

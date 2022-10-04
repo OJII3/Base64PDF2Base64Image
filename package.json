@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "pdf2pic": "^2.1.4"
+    "express": "^4.18.1",
+    "pdf2pic": "^2.1.4",
+    "puppeteer": "^18.0.5"
   }
 }
