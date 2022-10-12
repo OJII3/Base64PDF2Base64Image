@@ -35,108 +35,88 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var express = require("express");
-var puppeteer = require("puppeteer");
-var path = require("path");
-var lineApi = require("./line_api.js");
-var send = require("process").send;
-var port = process.env.PORT || 3000;
-var app = express();
-var contentType = {
-    base64image: "Image/Base64",
-    html: "text/html",
-    pdf: "application/pdf",
-    json: "application/json",
-    plainText: "text/plain",
-    jpeg: "image/jpeg"
-};
-function screenshot() {
-    return __awaiter(this, void 0, void 0, function () {
-        var browser, page;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, puppeteer.launch({
-                        args: [
-                            '--disable-gpu',
-                            '--disable-dev-shm-usage',
-                            '--disable-setuid-sandbox',
-                            '--no-first-run',
-                            '--no-sandbox',
-                            '--no-zygote',
-                            '--single-process'
-                        ]
-                    })];
-                case 1:
-                    browser = _a.sent();
-                    return [4 /*yield*/, browser.newPage()];
-                case 2:
-                    page = _a.sent();
-                    return [4 /*yield*/, page.goto("https://www.yahoo.co.jp/")];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, page.screenshot({ path: "example.jpeg" })];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, browser.close()];
-                case 5:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-var html = "Hello World";
-app.get("/", function (req, res) {
-    res.sendStatus(200);
-});
-app.get("/example.jpeg", function (req, res) {
-    lineApi.addMessage({ type: "text", text: "hello" });
-    lineApi.sendPushMessage();
-    screenshot();
-    res.send();
-});
-app.post("/", function (req, res) {
-    console.log("post recieved");
-    var options = {
-        root: path.join(__dirname)
+var Server;
+(function (Server) {
+    var express = require("express");
+    var puppeteer = require("puppeteer");
+    var path = require("path");
+    var lineApi = require("./line_api.js");
+    var send = require("process").send;
+    var port = process.env.PORT || 3000;
+    var app = express();
+    var contentType = {
+        base64image: "Image/Base64",
+        html: "text/html",
+        pdf: "application/pdf",
+        json: "application/json",
+        plainText: "text/plain",
+        jpeg: "image/jpeg"
     };
-    html = req.body;
-    (function () { return __awaiter(void 0, void 0, void 0, function () {
-        var browser, page;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, puppeteer.launch({
-                        args: [
-                            '--disable-gpu',
-                            '--disable-dev-shm-usage',
-                            '--disable-setuid-sandbox',
-                            '--no-first-run',
-                            '--no-sandbox',
-                            '--no-zygote',
-                            '--single-process'
-                        ]
-                    })];
-                case 1:
-                    browser = _a.sent();
-                    return [4 /*yield*/, browser.newPage()];
-                case 2:
-                    page = _a.sent();
-                    return [4 /*yield*/, page.goto("https://www.yahoo.co.jp/")];
-                case 3:
-                    _a.sent();
-                    return [4 /*yield*/, page.screenshot({ path: "example.jpeg" })];
-                case 4:
-                    _a.sent();
-                    return [4 /*yield*/, browser.close()];
-                case 5:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
+    /**
+     * Screenshot the web site and save as example.jpeg
+     */
+    function screenshot() {
+        return __awaiter(this, void 0, void 0, function () {
+            var browser, page;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, puppeteer.launch({
+                            args: [
+                                '--disable-gpu',
+                                '--disable-dev-shm-usage',
+                                '--disable-setuid-sandbox',
+                                '--no-first-run',
+                                '--no-sandbox',
+                                '--no-zygote',
+                                '--single-process'
+                            ]
+                        })];
+                    case 1:
+                        browser = _a.sent();
+                        return [4 /*yield*/, browser.newPage()];
+                    case 2:
+                        page = _a.sent();
+                        return [4 /*yield*/, page.goto("https://www.yahoo.co.jp/")];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, page.screenshot({
+                                path: "example.jpeg",
+                                fullPage: true
+                            })];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, browser.close()];
+                    case 5:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
         });
-    }); })();
-    res.setHeader("Content-Type", contentType.jpeg);
-    res.sendFile("example.jpeg", options, function (err) {
-        console.log(err);
+    }
+    var html = "Hello World";
+    app.get("/", function (req, res) {
+        res.sendStatus(200);
     });
-});
-app.listen(port, function () { return console.log("Listening on port ".concat(port)); });
+    app.get("/example.jpeg", function (req, res) {
+        // lineApi.addMessage({ type: "text", text: "hello" });
+        // lineApi.sendPushMessage();
+        screenshot();
+        var options = {
+            root: path.join(__dirname)
+        };
+        res.sendFile("example.jpeg", options, function () { });
+    });
+    app.post("/", function (req, res) {
+        console.log("post recieved");
+        var options = {
+            root: path.join(__dirname)
+        };
+        html = req.body;
+        screenshot();
+        res.setHeader("Content-Type", contentType.jpeg);
+        res.sendFile("example.jpeg", options, function (err) {
+            console.log(err);
+        });
+    });
+    app.listen(port, function () { return console.log("Listening on port ".concat(port)); });
+})(Server || (Server = {}));
