@@ -6,8 +6,7 @@ const path = require("path");
 const lineApi = require("./line_api.js");
 const { send } = require("process");
 namespace Server {
-
-
+  
   const port = process.env.PORT || 3000;
   const app = express();
 
