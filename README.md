@@ -1,12 +1,16 @@
 
 # HTML2JPEG Converter
 
-* This is a REST API.
+* I was trying to make a REST API with Node.js and Glitch.
+
+* Using puppeteer to screeenshot web pages.
+
+* This is the first time I use Typescript.
 
 # Environment
 
-* Node.js: 16.17.1
+* Node.js: v16.17.1
 
-* NPM: 8.15.0
+* NPM: v8.15.0
 
-* TypeScript: 4.8.4
+* TypeScript: v4.8.4
