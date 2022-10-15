@@ -139,19 +139,20 @@ app.get("/", function (req, res) {
     })();
 });
 app.get("/example.jpeg", function (req, res) {
-    lineApi.addMessage({ type: 'text', text: '`${path.join(__dirname)}/example.jpeg' });
-    lineApi.sendPushMessage();
+    var imageUrl = 'https://ebce-106-161-36-168.jp.ngrok.io';
     lineApi.addMessage({
         type: 'image',
-        originalContentUrl: "".concat(path.join(__dirname), "/example.jpeg"),
-        previewImageUrl: "".concat(path.join(__dirname), "/example.jpeg")
+        originalContentUrl: imageUrl,
+        previewImageUrl: imageUrl
     });
     lineApi.sendPushMessage();
     screenshot();
     var options = {
         root: path.join(__dirname)
     };
-    res.sendFile("example.jpeg", options, function () { });
+    res.sendFile("example.jpeg", options, function (err) {
+        console.log(err);
+    });
 });
 app.post("/", function (req, res) {
     console.log("post recieved");

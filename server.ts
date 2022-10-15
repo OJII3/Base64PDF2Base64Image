@@ -78,23 +78,24 @@ app.get("/", (req: any, res: any) => {
 
 app.get("/example.jpeg", (req: any, res: any) => {
 
-  lineApi.addMessage({type: 'text', text: '`${path.join(__dirname)}/example.jpeg'});
-  lineApi.sendPushMessage();
+  const imageUrl = 'ImageURL';
+
   lineApi.addMessage({
     type: 'image',
-    originalContentUrl: `${path.join(__dirname)}/example.jpeg`,
-    previewImageUrl: `${path.join(__dirname)}/example.jpeg`
+    originalContentUrl: imageUrl,
+    previewImageUrl: imageUrl
   });
   lineApi.sendPushMessage();
-  
+
   screenshot();
 
   const options = {
     root: path.join(__dirname)
   };
-  res.sendFile("example.jpeg", options, () => { }
-  );
-})
+  res.sendFile("example.jpeg", options, (err) => {
+    console.log(err);
+  });
+});
 
 app.post("/", (req: any, res: any) => {
   console.log("post recieved");
