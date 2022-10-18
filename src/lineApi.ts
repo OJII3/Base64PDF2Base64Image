@@ -50,8 +50,7 @@ export class LineApi {
       headers: {
         "Content-Type": "application/json; charaset=UTF-8",
         Authorization: `Bearer ${accessToken}`
-      },
-      payload: data
+      }
     };
 
     const url = "https://api.line.me/v2/bot/message/push/";
