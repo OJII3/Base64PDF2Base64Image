@@ -37,7 +37,7 @@ async function screenshot() {
   const page = await browser.newPage();
   await page.goto("https://github.com/OJII3");
   await page.screenshot({
-    path: "example.jpeg",
+    path: "img/example.jpeg",
     fullPage: true
   }).then((value: Buffer) => buffer = value);
   await browser.close();
@@ -92,7 +92,7 @@ app.get("/example.jpeg", (req: any, res: any) => {
   const options = {
     root: path.join(__dirname)
   };
-  res.sendFile("example.jpeg", options, (err) => {
+  res.sendFile("example.jpeg", options, (err: any) => {
     console.log(err);
   });
 });
