@@ -3,7 +3,7 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require('path');
-import { LineApi } from './src/lineApi.js';
+import { LineApi } from './src/lineApi';
 
 const lineApi = new LineApi();
 const port = process.env.PORT || 3000;
@@ -47,6 +47,7 @@ let html = "Hello World";
 
 
 app.get("/", (req: any, res: any) => {
+  console.log(req.data);
   (async function screenshot() {
     let buffer: Buffer;
     const browser = await puppeteer.launch({
@@ -63,13 +64,13 @@ app.get("/", (req: any, res: any) => {
     const page = await browser.newPage();
     await page.goto("https://github.com/OJII3");
     await page.screenshot({
-      path: "example.jpeg",
+      path: "img/example.jpeg",
       fullPage: true
     }).then((value: Buffer) => {
       const options = {
         root: path.join(__dirname)
       };
-      res.sendFile("example.jpeg", options, (err: any) => console.error(err));
+      res.sendFile("img/example.jpeg", options, (err: any) => console.error(err));
     });
     await browser.close();
   })();
@@ -92,7 +93,7 @@ app.get("/example.jpeg", (req: any, res: any) => {
   const options = {
     root: path.join(__dirname)
   };
-  res.sendFile("example.jpeg", options, (err: any) => {
+  res.sendFile("img/example.jpeg", options, (err: any) => {
     console.log(err);
   });
 });
@@ -107,7 +108,7 @@ app.post("/", (req: any, res: any) => {
 
   screenshot();
   res.setHeader("Content-Type", contentType.jpeg);
-  res.sendFile("example.jpeg", options, (err: any) => {
+  res.sendFile("img/example.jpeg", options, (err: any) => {
     console.log(err);
   });
 });
