@@ -4,8 +4,10 @@ const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require('path');
 import { LineApi } from './src/lineApi';
+import { Screenshot } from './src/screenshot';
 
 const lineApi = new LineApi();
+const screenshot = new Screenshot();
 const port = process.env.PORT || 3000;
 const app = express();
 
@@ -21,59 +23,18 @@ const contentType = {
 /**
  * Screenshot the web site and save as example.jpeg
  */
-async function screenshot() {
-  let buffer: Buffer;
-  const browser = await puppeteer.launch({
-    args: [
-      '--disable-gpu',
-      '--disable-dev-shm-usage',
-      '--disable-setuid-sandbox',
-      '--no-first-run',
-      '--no-sandbox',
-      '--no-zygote',
-      '--single-process'
-    ]
-  });
-  const page = await browser.newPage();
-  await page.goto("https://github.com/OJII3");
-  await page.screenshot({
-    path: "img/example.jpeg",
-    fullPage: true
-  }).then((value: Buffer) => buffer = value);
-  await browser.close();
-}
+
 
 let html = "Hello World";
 
 
 app.get("/", (req: any, res: any) => {
   console.log(req.data);
-  (async function screenshot() {
-    let buffer: Buffer;
-    const browser = await puppeteer.launch({
-      args: [
-        '--disable-gpu',
-        '--disable-dev-shm-usage',
-        '--disable-setuid-sandbox',
-        '--no-first-run',
-        '--no-sandbox',
-        '--no-zygote',
-        '--single-process'
-      ]
-    });
-    const page = await browser.newPage();
-    await page.goto("https://github.com/OJII3");
-    await page.screenshot({
-      path: "img/example.jpeg",
-      fullPage: true
-    }).then((value: Buffer) => {
-      const options = {
-        root: path.join(__dirname)
-      };
-      res.sendFile("img/example.jpeg", options, (err: any) => console.error(err));
-    });
-    await browser.close();
-  })();
+  screenshot.shot();
+  const options = {
+    root: path.join(__dirname)
+  };
+  res.sendFile("img/example.jpeg", options, (err: any) => console.error(err));
 });
 
 
@@ -88,7 +49,7 @@ app.get("/example.jpeg", (req: any, res: any) => {
   });
   lineApi.sendPushMessage();
 
-  screenshot();
+  screenshot.shot();
 
   const options = {
     root: path.join(__dirname)
@@ -106,7 +67,7 @@ app.post("/", (req: any, res: any) => {
 
   html = req.body;
 
-  screenshot();
+  screenshot.shot();
   res.setHeader("Content-Type", contentType.jpeg);
   res.sendFile("img/example.jpeg", options, (err: any) => {
     console.log(err);

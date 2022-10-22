@@ -1,14 +1,14 @@
 {
-  "name": "html_to_pic",
+  "name": "html2jpeg",
   "version": "0.1.0",
-  "description": "",
+  "description": "* I was trying to make a REST API with Node.js and Glitch.",
   "main": "out/server.js",
   "scripts": {
     "start": "out/server.js",
     "dev": "ts-node server.ts",
     "dev:watch": "ts-node-dev --respawn index.ts"
   },
-  "author": "",
+  "author": "OJII3",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.3",
@@ -19,5 +19,13 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.14"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OJII3/Base64PDF2Base64Image.git"
+  },
+  "bugs": {
+    "url": "https://github.com/OJII3/Base64PDF2Base64Image/issues"
+  },
+  "homepage": "https://github.com/OJII3/Base64PDF2Base64Image#readme"
 }
