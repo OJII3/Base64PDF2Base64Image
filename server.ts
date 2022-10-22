@@ -1,44 +1,39 @@
 "use strict";
 
-const express = require('express');
-const puppeteer = require('puppeteer');
-const path = require('path');
+import express = require('express');
+import path = require('path');
 import { LineApi } from './src/lineApi';
-import { Screenshot } from './src/screenshot';
+import { Screenshotter } from './src/screenshotter';
+import { ContentType } from './src/contentType';
 
 const lineApi = new LineApi();
-const screenshot = new Screenshot();
+const screenshotter = new Screenshotter('https://youtube.com');
+
 const port = process.env.PORT || 3000;
 const app = express();
-
-const contentType = {
-  base64image: "Image/Base64",
-  html: "text/html",
-  pdf: "application/pdf",
-  json: "application/json",
-  plainText: "text/plain",
-  jpeg: "image/jpeg",
-};
-
-/**
- * Screenshot the web site and save as example.jpeg
- */
-
 
 let html = "Hello World";
 
 
 app.get("/", (req: any, res: any) => {
   console.log(req.data);
-  screenshot.shot();
+  screenshotter.shot();
   const options = {
     root: path.join(__dirname)
   };
   res.sendFile("img/example.jpeg", options, (err: any) => console.error(err));
 });
 
-
 app.get("/example.jpeg", (req: any, res: any) => {
+  console.log(req.data);
+  screenshotter.shot();
+  const options = {
+    root: path.join(__dirname)
+  };
+  res.sendFile("img/example.jpeg", options, (err: any) => console.error(err));
+});
+
+app.get("/send", (req: any, res: any) => {
 
   const imageUrl = 'ImageURL';
 
@@ -48,15 +43,6 @@ app.get("/example.jpeg", (req: any, res: any) => {
     previewImageUrl: imageUrl
   });
   lineApi.sendPushMessage();
-
-  screenshot.shot();
-
-  const options = {
-    root: path.join(__dirname)
-  };
-  res.sendFile("img/example.jpeg", options, (err: any) => {
-    console.log(err);
-  });
 });
 
 app.post("/", (req: any, res: any) => {
@@ -67,8 +53,8 @@ app.post("/", (req: any, res: any) => {
 
   html = req.body;
 
-  screenshot.shot();
-  res.setHeader("Content-Type", contentType.jpeg);
+  screenshotter.shot();
+  res.setHeader("Content-Type", ContentType.jpeg);
   res.sendFile("img/example.jpeg", options, (err: any) => {
     console.log(err);
   });

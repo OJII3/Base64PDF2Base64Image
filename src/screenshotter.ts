@@ -2,7 +2,7 @@
 
 const puppeteer = require('puppeteer');
 
-export class Screenshot {
+export class Screenshotter {
 
   url = 'https://youtube.com';
 
